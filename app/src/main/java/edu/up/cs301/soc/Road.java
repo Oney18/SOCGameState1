@@ -12,8 +12,8 @@ public class Road {
     private int number;
     private boolean isEmpty;
     private int player;
-    private int [] adjacentRoads;
-    private int [] adjacentBuildings;
+    private byte [] adjacentRoads;
+    private byte [] adjacentBuildings;
 
     //Variables to eliminate use of random integers
     public static final int EMPTY = -1;
@@ -29,7 +29,7 @@ public class Road {
     public static final int SMALLEST_NUMBER_BUILDINGS_ADJACENT_TO_A_ROAD = 0;
 
     //Constructor
-    public Road (int newNumber, int[] newAdjacentRoads, int[] newAdjacentBuildings){
+    public Road (int newNumber, byte[] newAdjacentRoads, byte[] newAdjacentBuildings){
         setNumber(newNumber);
         isEmpty = true;
         player = EMPTY;
@@ -53,12 +53,12 @@ public class Road {
     }
 
     //Method to return the array of adjacent roads
-    public int[] getAdjacentRoads(){
+    public byte[] getAdjacentRoads(){
         return adjacentRoads;
     }
 
     //Method to return the array of adjacent buildings
-    public int[] getAdjacentBuildings(){
+    public byte[] getAdjacentBuildings(){
         return adjacentBuildings;
     }
 
@@ -82,7 +82,7 @@ public class Road {
     }
 
     //Method to set one of the roads that are adjacent
-    public void setAdjacentRoads ( int index, int number){
+    public void setAdjacentRoads ( int index, byte number){
         if (index < TOTAL_NUMBER_ROADS_ADJACENT_TO_A_ROAD &&
                 index >= SMALLEST_NUMBER_ROADS_ADJACENT_TO_A_ROAD &&
                 number < TOTAL_NUMBER_OF_ROAD_SPOTS && number >= SMALLEST_NUMBER_OF_ROAD_SPOTS){
@@ -91,7 +91,7 @@ public class Road {
     }
 
     //Method to set one of the buildings that are adjacent
-    public void setAdjacentBuildings ( int index, int number){
+    public void setAdjacentBuildings ( int index, byte number){
         if (index < TOTAL_NUMBER_BUILDINGS_ADJACENT_TO_A_ROAD &&
                 index >= SMALLEST_NUMBER_BUILDINGS_ADJACENT_TO_A_ROAD &&
                 number < TOTAL_NUMBER_OF_BUILDING_SPOTS &&

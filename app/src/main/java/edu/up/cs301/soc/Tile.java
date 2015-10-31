@@ -12,8 +12,8 @@ public class Tile {
     private int numberOfTile;
     private int rollNumber;
     private int resource;
-    private int [] adjacentRoads;
-    private int [] adjacentBuildings;
+    private byte [] adjacentRoads;
+    private byte [] adjacentBuildings;
 
     //Variables to eliminate use of random integers
     public static final int TOTAL_NUMBER_OF_ROAD_SPOTS = 72;
@@ -36,11 +36,10 @@ public class Tile {
     public static final int WHEAT = 5;
 
     //Constructor
-    public Tile (int newTileNumber, int newRollNumber, int newResource, int[] newAdjacentRoads, int[] newAdjacentBuildings){
+    public Tile (int newTileNumber, int newRollNumber, int newResource, byte[] newAdjacentBuildings){
         setNumber(newTileNumber);
         setRollNumber(newRollNumber);
         resource = newResource;
-        adjacentRoads = newAdjacentRoads;
         adjacentBuildings = newAdjacentBuildings;
     }
 
@@ -55,17 +54,12 @@ public class Tile {
     }
 
     //Method to return the type of resource the tile is
-    public int getResource(){
+    public int getResource() {
         return resource;
     }
 
-    //Method to return the array of adjacent roads
-    public int[] getAdjacentRoads(){
-        return adjacentRoads;
-    }
-
     //Method to return the array of adjacent buildings
-    public int[] getAdjacentBuildings(){
+    public byte[] getAdjacentBuildings(){
         return adjacentBuildings;
     }
 
@@ -92,7 +86,7 @@ public class Tile {
     }
 
     //Method to set one of the roads that are adjacent
-    public void setAdjacentRoads ( int index, int number){
+    public void setAdjacentRoads ( int index, byte number){
         if (index < TOTAL_NUMBER_ROADS_ADJACENT_TO_A_ROAD &&
                 index >= SMALLEST_NUMBER_ROADS_ADJACENT_TO_A_ROAD &&
                 number < TOTAL_NUMBER_OF_ROAD_SPOTS && number >= SMALLEST_NUMBER_OF_ROAD_SPOTS){
@@ -101,7 +95,7 @@ public class Tile {
     }
 
     //Method to set one of the buildings that are adjacent
-    public void setAdjacentBuildings ( int index, int number){
+    public void setAdjacentBuildings ( int index, byte number){
         if (index < TOTAL_NUMBER_BUILDINGS_ADJACENT_TO_A_ROAD &&
                 index >= SMALLEST_NUMBER_BUILDINGS_ADJACENT_TO_A_ROAD &&
                 number < TOTAL_NUMBER_OF_BUILDING_SPOTS &&

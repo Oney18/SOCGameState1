@@ -49,16 +49,16 @@ public class PigHumanPlayer extends GameHumanPlayer implements OnClickListener {
      * @return
      * 		the top object in the GUI's view heirarchy
      */
-    public View getTopView() {
+  /*  public View getTopView() {
         return myActivity.findViewById(R.id.top_gui_layout);
     }
 
-    /**
+    *//**
      * callback method when we get a message (e.g., from the game)
      *
      * @param info
      * 		the message
-     */
+     *//*
     @Override
     public void receiveInfo(GameInfo info) {
         if(info instanceof PigGameState) {
@@ -91,13 +91,13 @@ public class PigHumanPlayer extends GameHumanPlayer implements OnClickListener {
 
     }//receiveInfo
 
-    /**
+    *//**
      * this method gets called when the user clicks the '+' or '-' button. It
      * creates a new CounterMoveAction to return to the parent activity.
      *
      * @param button
      * 		the button that was clicked
-     */
+     *//*
     public void onClick(View button) {
         if(button.equals(holdButton))
         {
@@ -110,13 +110,13 @@ public class PigHumanPlayer extends GameHumanPlayer implements OnClickListener {
 
     }// onClick
 
-    /**
+    *//**
      * callback method--our game has been chosen/rechosen to be the GUI,
      * called from the GUI thread
      *
      * @param activity
      * 		the activity under which we are running
-     */
+     *//*
     public void setAsGui(GameMainActivity activity) {
 
         // remember the activity
@@ -143,3 +143,4 @@ public class PigHumanPlayer extends GameHumanPlayer implements OnClickListener {
 
 }// class CounterHumanPlayer
 
+*/

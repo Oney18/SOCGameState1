@@ -13,8 +13,8 @@ public class Building {
     private boolean isEmpty;
     private int player;
     private int typeOfBuilding;
-    private int [] adjacentRoads;
-    private int [] adjacentTiles;
+    private byte [] adjacentRoads;
+    private byte [] adjacentTiles;
 
     //Variables to eliminate use of random integers
     public static final int EMPTY = -1;
@@ -34,7 +34,7 @@ public class Building {
     public static final int SMALLEST_NUMBER_ROADS_ADJACENT_TO_A_BUILDING = 0;
 
     //Constructor
-    public Building (int newNumber, int[] newAdjacentRoads, int[] newAdjacentTiles){
+    public Building (int newNumber, byte[] newAdjacentRoads, byte[] newAdjacentTiles){
         setNumber(newNumber);
         isEmpty = true;
         player = EMPTY;
@@ -64,12 +64,12 @@ public class Building {
     }
 
     //Method to return the array of adjacent roads
-    public int[] getAdjacentRoads(){
+    public byte[] getAdjacentRoads(){
         return adjacentRoads;
     }
 
     //Method to return the array of adjacent buildings
-    public int[] getAdjacentTiles(){
+    public byte[] getAdjacentTiles(){
         return adjacentTiles;
     }
 
@@ -101,14 +101,14 @@ public class Building {
     }
 
     //Method to set one of the roads that are adjacent
-    public void setAdjacentRoads ( int index, int number){
+    public void setAdjacentRoads ( int index, byte number){
         if (index < TOTAL_NUMBER_ROADS_ADJACENT_TO_A_BUILDING && index >= SMALLEST_NUMBER_ROADS_ADJACENT_TO_A_BUILDING && number < TOTAL_NUMBER_OF_ROAD_SPOTS && number >= SMALLEST_NUMBER_OF_ROAD_SPOTS){
             adjacentRoads[index] = number;
         }
     }
 
     //Method to set one of the buildings that are adjacent
-    public void setAdjacentTiles ( int index, int number){
+    public void setAdjacentTiles ( int index, byte number){
         if (index < TOTAL_NUMBER_TILES_ADJACENT_TO_A_BUILDING && index >=
                 SMALLEST_NUMBER_TILES_ADJACENT_TO_A_BUILDING && number < TOTAL_NUMBER_OF_TILE_SPOTS
                 && number >= SMALLEST_NUMBER_OF_TILE_SPOTS){

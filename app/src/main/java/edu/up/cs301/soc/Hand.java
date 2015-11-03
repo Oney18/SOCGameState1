@@ -19,6 +19,12 @@ public class Hand {
         rocks = 0;
     }
 
+    //used for 7 roll GUI
+    public int getTotal()
+    {
+        return wheats + sheep + wood + bricks + rocks;
+    }
+
     public int getWheats()
     {
         return wheats;

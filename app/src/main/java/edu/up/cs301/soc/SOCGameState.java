@@ -137,14 +137,112 @@ public class SOCGameState extends GameState {
         return die2;
     }
 
-    public void roll()
+    // --- used by players to see if need to send in robber action ---
+    public int getRoll()
+    {
+        return die1 + die2;
+    }
+
+    public void roll() //TODO: there must be a cleaner way to do this
     {
         die1 = rng.nextInt(6) + 1;
         die2 = rng.nextInt(6) + 1;
 
-        if(die1 + die2 == 7)
+        if(die1 + die2 != 7) //why do if 7
         {
-            //do robber stuff
+            for(byte i = 0; i < tiles.length; i++) //check all tiles for the roll number
+            {
+                if(tiles[i].getRollNumber() == die1 + die2) //a tile matches the roll, dispense res
+                {
+                    byte[] buildList = tileToBuildingAdjList[i]; //tile's adj spots
+                    switch(tiles[i].getResource()) {
+                        case 1: //wood
+                            for (byte j = 0; j < buildList.length; j++) {
+                                switch (buildings[buildList[j]].getTypeOfBuilding()) {
+                                    case 0: //settlement
+                                        hands[buildings[buildList[j]].getPlayer()].addWood(1);
+                                        break;
+
+                                    case 1: //city
+                                        hands[buildings[buildList[j]].getPlayer()].addWood(2);
+                                        break;
+
+                                    default: //empty
+                                        break;
+                                }
+                            }
+                            break;
+
+                        case 2: //rock
+                            for (byte j = 0; j < buildList.length; j++) {
+                                switch (buildings[buildList[j]].getTypeOfBuilding()) {
+                                    case 0: //settlement
+                                        hands[buildings[buildList[j]].getPlayer()].addRock(1);
+                                        break;
+
+                                    case 1: //city
+                                        hands[buildings[buildList[j]].getPlayer()].addRock(2);
+                                        break;
+
+                                    default: //empty
+                                        break;
+                                }
+                            }
+                            break;
+
+                        case 3: //brick
+                            for (byte j = 0; j < buildList.length; j++) {
+                                switch (buildings[buildList[j]].getTypeOfBuilding()) {
+                                    case 0: //settlement
+                                        hands[buildings[buildList[j]].getPlayer()].addBrick(1);
+                                        break;
+
+                                    case 1: //city
+                                        hands[buildings[buildList[j]].getPlayer()].addBrick(2);
+                                        break;
+
+                                    default: //empty
+                                        break;
+                                }
+                            }
+                            break;
+
+                        case 4: //sheep
+                            for (byte j = 0; j < buildList.length; j++) {
+                                switch (buildings[buildList[j]].getTypeOfBuilding()) {
+                                    case 0: //settlement
+                                        hands[buildings[buildList[j]].getPlayer()].addSheep(1);
+                                        break;
+
+                                    case 1: //city
+                                        hands[buildings[buildList[j]].getPlayer()].addSheep(2);
+                                        break;
+
+                                    default: //empty
+                                        break;
+                                }
+                            }
+                            break;
+
+                        case 5: //wheat
+                            for (byte j = 0; j < buildList.length; j++) {
+                                switch (buildings[buildList[j]].getTypeOfBuilding()) {
+                                    case 0: //settlement
+                                        hands[buildings[buildList[j]].getPlayer()].addWheat(1);
+                                        break;
+
+                                    case 1: //city
+                                        hands[buildings[buildList[j]].getPlayer()].addWheat(2);
+                                        break;
+
+                                    default: //empty
+                                        break;
+                                }
+                            }
+                            break;
+                    }
+                }
+            }
         }
     }
 
@@ -184,7 +282,7 @@ public class SOCGameState extends GameState {
             return false; //lacking resources!
         }
 
-        byte[] roadList = roadToRoadAdjList[spot];
+        byte[] roadList = roadToRoadAdjList[spot]; //TODO: logic to see if road is broken?
         for(int i = 0; i < roadList.length; i++ )
         {
             if(roads[roadList[i]].getPlayer() == playersID) //adjacent road is owned, can create road at spot

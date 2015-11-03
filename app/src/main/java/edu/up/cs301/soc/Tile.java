@@ -28,6 +28,8 @@ public class Tile {
     public static final int SMALLEST_NUMBER_OF_TILE_SPOTS = 0;
     public static final int LARGEST_ROLL_NUMBER = 12;
     public static final int SMALLEST_ROLL_NUMBER = 2;
+
+
     public static final int DESERT = 0;
     public static final int LUMBER = 1;
     public static final int ORE = 2;

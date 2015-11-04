@@ -50,7 +50,7 @@ public class SOCGameState extends GameState {
 
     //Default constructor for the game state that, sets first player to player0, initializes all
     //players scores to 0, sets both dice values to 1, puts the robber in the desert, and creates all
-    //the roads, tiles, buildings, and players hands.
+    //the roads, tiles, buildings, players hands and robber rolled.
     public SOCGameState()
     {
         playersID = 0;
@@ -207,7 +207,7 @@ public class SOCGameState extends GameState {
     }
 
     //Method to handle rolling the dice and distributing resources
-    public void roll() //TODO: there must be a cleaner way to do this
+    public void roll()
     {
         //Set dice to random values
         die1 = rng.nextInt(6) + 1;
@@ -226,9 +226,10 @@ public class SOCGameState extends GameState {
         }
     }
 
-    
+    //Method to move robber
     public boolean moveRobber(int spot)
     {
+
         Random RNG = new Random();
         robber = spot;
         byte[] adjList = tileToBuildingAdjList[spot];
@@ -255,6 +256,7 @@ public class SOCGameState extends GameState {
         return false;
     }
 
+    //Method to remove resources from a hand and to set robber rolled to false
     public void removeResources(int woodToLose, int sheepToLose, int wheatToLose, int brickToLose,
                                 int rockToLose)
     {
@@ -271,7 +273,8 @@ public class SOCGameState extends GameState {
     {
         return robber;
     }
-    
+
+    //Method to return if a robber was rolled
     public boolean[] getRobberWasRolled()
     {
         return robberWasRolled;
@@ -322,7 +325,6 @@ public class SOCGameState extends GameState {
         //Make sure that the player building the road has another road adjacent to the spot they
         //want to build. If the player does, build road, set the road to not empty, remove
         //resources, and return true
-        byte[] roadList = roadToRoadAdjList[spot];
         for(int i = 0; i < roadList.length; i++ )
         {
             if(roads[roadList[i]].getPlayer() == playersID)

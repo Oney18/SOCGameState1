@@ -8,7 +8,8 @@ import edu.up.cs301.game.infoMsg.GameState;
  */
 public class SOCGameState extends GameState {
     private int playersID; //ID of the player whose turn it is
-    private int score0; //player 0's score
+    private int numPlayers; //number of players for this game
+    private int score0; //player 0's score TODO: make scores in an array
     private int score1; //player 1's score
     private int score2; //player 2's score
     private int score3; //player 3's score
@@ -51,9 +52,10 @@ public class SOCGameState extends GameState {
     //Default constructor for the game state that, sets first player to player0, initializes all
     //players scores to 0, sets both dice values to 1, puts the robber in the desert, and creates all
     //the roads, tiles, buildings, and players hands.
-    public SOCGameState()
+    public SOCGameState(int numPlayers)
     {
         playersID = 0;
+        this.numPlayers = numPlayers;
         score0 = 0;
         score1 = 0;
         score2 = 0;
@@ -316,9 +318,6 @@ public class SOCGameState extends GameState {
             return false; //lacking resources!
         }
 
-        //Get list of adjacent roads to the current spot
-        byte[] roadList = roadToRoadAdjList[spot]; //TODO: logic to see if road is broken?
-
         //Make sure that the player building the road has another road adjacent to the spot they
         //want to build. If the player does, build road, set the road to not empty, remove
         //resources, and return true
@@ -402,5 +401,10 @@ public class SOCGameState extends GameState {
         hands[playersID].removeRock(3);
         hands[playersID].removeWheat(2);
         return true;
+    }
+     //Moves the turn to the enxt player in the rotation
+    public void endTurn()
+    {
+        playersID = (playersID + 1) % 3;
     }
 }

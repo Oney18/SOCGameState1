@@ -209,7 +209,7 @@ public class SOCGameState extends GameState {
     }
 
     //Method to handle rolling the dice and distributing resources
-    public void roll() //TODO: there must be a cleaner way to do this
+    public void roll()
     {
         //Set dice to random values
         die1 = rng.nextInt(6) + 1;
@@ -228,9 +228,10 @@ public class SOCGameState extends GameState {
         }
     }
 
-    
+    //Method to move robber
     public boolean moveRobber(int spot)
     {
+
         Random RNG = new Random();
         robber = spot;
         byte[] adjList = tileToBuildingAdjList[spot];
@@ -257,6 +258,7 @@ public class SOCGameState extends GameState {
         return false;
     }
 
+    //Method to remove resources from a hand and to set robber rolled to false
     public void removeResources(int woodToLose, int sheepToLose, int wheatToLose, int brickToLose,
                                 int rockToLose)
     {
@@ -273,7 +275,8 @@ public class SOCGameState extends GameState {
     {
         return robber;
     }
-    
+
+    //Method to return if a robber was rolled
     public boolean[] getRobberWasRolled()
     {
         return robberWasRolled;

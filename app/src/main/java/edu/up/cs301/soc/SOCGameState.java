@@ -19,6 +19,7 @@ public class SOCGameState extends GameState {
     private Tile[] tiles; //all the tiles
     private Building[] buildings; //all the building spots
     private Hand[] hands; //the players' hands
+    private boolean[] robberWasRolled; //denotes if a 7 was rolled before and player has reacted
 
     //List of all roads adjacent to a given road
     public static final byte[][] roadToRoadAdjList = {{1, 6}, {0, 2, 7}, {1, 3, 7}, {2, 4, 8}, {3, 5, 8}, {4, 9}, {0, 10, 11}, {1, 2, 12, 13}, {3, 4, 14, 15}, {5, 16, 17}, {6, 11, 18}, {6, 10, 12, 19}, {7, 11, 13, 19}, {7, 12, 14, 20}, {8, 13, 15, 20}, {8, 14, 16, 21}, {9, 15, 17, 21}, {9, 16, 22}, {10, 23, 24}, {11, 12, 25, 26}, {13, 14, 27, 28}, {15, 16, 29, 30}, {17, 31, 32}, {18, 24, 33}, {18, 23, 25, 34}, {19, 24, 26, 34}, {19, 25, 27, 35}, {20, 26, 28, 35}, {20, 27, 29, 36}, {21, 28, 30, 36}, {21, 29, 31, 37}, {22, 30, 32, 37}, {22, 31, 38}, {23, 39}, {24, 25, 40, 41}, {26, 27, 42, 43}, {28, 29, 44, 45}, {30, 31, 46, 47}, {32, 48}, {33, 40, 49}, {34, 39, 41, 49}, {34, 40, 42, 50}, {35, 41, 43, 50}, {35, 42, 44, 51}, {36, 43, 45, 51}, {36, 44, 46, 52}, {37, 45, 47, 52}, {37, 46, 48, 53}, {38, 47, 53}, {39, 40, 54}, {41, 42, 55, 56}, {43, 44, 57, 58}, {45, 46, 59, 60}, {47, 48, 61}, {49, 55, 62}, {50, 54, 56, 62}, {50, 55, 57, 63}, {51, 56, 58, 63}, {51, 57, 59, 64}, {52, 58, 60, 64}, {52, 59, 61, 65}, {53, 60, 65}, {54, 55, 66}, {56, 57, 67, 68}, {58, 59, 69, 70}, {60, 61, 71}, {62, 67}, {63, 66, 68}, {63, 67, 69}, {64, 68, 70}, {64, 69, 71}, {65, 70}};
@@ -59,7 +60,8 @@ public class SOCGameState extends GameState {
         score3 = 0;
         die1 = 1;
         die2 = 1;
-        robber = Tile.DESERT; //TODO: dynamically search
+        robber = 7;
+        robberWasRolled = new boolean[]{false, false, false, false};
 
         //Initialize all roads on the board
         roads = new Road[72];
@@ -92,7 +94,8 @@ public class SOCGameState extends GameState {
 
     //Constructor to set all instance variables to values passed in as parameters
     public SOCGameState(int ID, int score0, int score1, int score2, int score3, int die1, int die2,
-                        int robber, Road[] roads, Tile[] tiles, Building[] buildings, Hand[] hands)
+                        int robber, Road[] roads, Tile[] tiles, Building[] buildings, Hand[] hands,
+                        boolean[] robberWasRolled)
     {
         this.playersID = ID;
         this.score0 = score0;
@@ -106,13 +109,14 @@ public class SOCGameState extends GameState {
         this.tiles = tiles;
         this.buildings = buildings;
         this.hands = hands;
+        this.robberWasRolled = robberWasRolled;
     }
 
     //Copy constructor to create an identical version of the given game state
     public SOCGameState(SOCGameState soc){
         this(soc.getPlayersID(), soc.getScore0(), soc.getScore1(), soc.getScore2(), soc.getScore3(),
                 soc.getDie1(), soc.getDie2(), soc.getRobber(), soc.getRoads(), soc.getTiles(), soc.getBuildings(),
-                soc.getHands());
+                soc.getHands(), soc.getRobberWasRolled());
     }
 
     //Method to return the player who's turn it currently is
@@ -156,7 +160,7 @@ public class SOCGameState extends GameState {
     {
         return die2;
     }
-
+    
     //Method to return the added value of the two dice
     public int getRoll()
     {
@@ -213,7 +217,7 @@ public class SOCGameState extends GameState {
         {
             for(byte i = 0; i < tiles.length; i++) //check all tiles for the roll number
             {
-                if(tiles[i].getRollNumber() == die1 + die2) //a tile matches the roll, dispense res
+                if(tiles[i].getRollNumber() == die1 + die2 && i != robber) //a tile matches the roll, dispense res
                 {
                     byte[] buildList = tileToBuildingAdjList[i]; //tile's adj spots
                     distributeResources(buildList,tiles[i].getResource());
@@ -222,10 +226,55 @@ public class SOCGameState extends GameState {
         }
     }
 
+    
+    public boolean moveRobber(int spot)
+    {
+        Random RNG = new Random();
+        robber = spot;
+        byte[] adjList = tileToBuildingAdjList[spot];
+
+        for(byte i = 0; i < adjList.length; i++)
+        {
+            if(buildings[adjList[i]].getPlayer() != Building.EMPTY &&
+                    hands[buildings[adjList[i]].getPlayer()].getTotal() != 0)
+            {
+                int resourceToSteal = RNG.nextInt(5)+1; //adds randomness to the resource selection
+                for(int j = 0; j < 6; j++)
+                {
+                    int type = (j + resourceToSteal) % 6;
+                    if(hands[buildings[adjList[i]].getPlayer()].checkIfEmpty(type))
+                    {
+                        hands[buildings[adjList[i]].getPlayer()].stealResource(type);
+                        hands[playersID].addResource(type);
+                        return true;
+                    }
+                }
+            }
+        }
+
+        return false;
+    }
+
+    public void removeResources(int woodToLose, int sheepToLose, int wheatToLose, int brickToLose,
+                                int rockToLose)
+    {
+        hands[playersID].removeWood(woodToLose);
+        hands[playersID].removeSheep(sheepToLose);
+        hands[playersID].removeWheat(wheatToLose);
+        hands[playersID].removeBrick(brickToLose);
+        hands[playersID].removeRock(rockToLose);
+        robberWasRolled[playersID] = false;
+    }
+
     //Method to return where the robber is located
     public int getRobber()
     {
         return robber;
+    }
+    
+    public boolean[] getRobberWasRolled()
+    {
+        return robberWasRolled;
     }
 
     //Method to return the list of roads
@@ -273,6 +322,7 @@ public class SOCGameState extends GameState {
         //Make sure that the player building the road has another road adjacent to the spot they
         //want to build. If the player does, build road, set the road to not empty, remove
         //resources, and return true
+        byte[] roadList = roadToRoadAdjList[spot];
         for(int i = 0; i < roadList.length; i++ )
         {
             if(roads[roadList[i]].getPlayer() == playersID)

@@ -99,4 +99,89 @@ public class Hand {
     {
         this.rocks -= count;
     }
+
+    //used when a 7 is rolled
+    public boolean checkIfEmpty(int type)
+    {
+        switch(type)
+        {
+            case Tile.LUMBER:
+                return wood == 0;
+
+            case Tile.ORE:
+                return rocks == 0;
+
+            case Tile.BRICK:
+                return bricks == 0;
+
+            case Tile.WOOL:
+                return sheep == 0;
+
+            case Tile.WHEAT:
+                return wheats == 0;
+
+            default:
+                return false;
+        }
+    }
+
+    //used when a 7 is rolled
+    public boolean stealResource(int type)
+    {
+        switch(type)
+        {
+            case Tile.LUMBER:
+                wood--;
+                return true;
+
+            case Tile.ORE:
+                rocks--;
+                return true;
+
+            case Tile.BRICK:
+                bricks--;
+                return true;
+
+            case Tile.WOOL:
+                sheep--;
+                return true;
+
+            case Tile.WHEAT:
+                wheats--;
+                return true;
+
+            default:
+                return false;
+        }
+    }
+
+    //used when a 7 is rolled
+    public boolean addResource(int type)
+    {
+        switch(type)
+        {
+            case Tile.LUMBER:
+                wood++;
+                return true;
+
+            case Tile.ORE:
+                rocks++;
+                return true;
+
+            case Tile.BRICK:
+                bricks++;
+                return true;
+
+            case Tile.WOOL:
+                sheep++;
+                return true;
+
+            case Tile.WHEAT:
+                wheats++;
+                return true;
+
+            default:
+                return false;
+        }
+    }
 }

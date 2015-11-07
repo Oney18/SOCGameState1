@@ -232,7 +232,6 @@ public class SOCGameState extends GameState {
     public boolean moveRobber(int spot)
     {
 
-        Random RNG = new Random();
         robber = spot;
         byte[] adjList = tileToBuildingAdjList[spot];
 
@@ -241,11 +240,11 @@ public class SOCGameState extends GameState {
             if(buildings[adjList[i]].getPlayer() != Building.EMPTY &&
                     hands[buildings[adjList[i]].getPlayer()].getTotal() != 0)
             {
-                int resourceToSteal = RNG.nextInt(5)+1; //adds randomness to the resource selection
+                int resourceToSteal = rng.nextInt(5)+1; //adds randomness to the resource selection
                 for(int j = 0; j < 6; j++)
                 {
                     int type = (j + resourceToSteal) % 6;
-                    if(hands[buildings[adjList[i]].getPlayer()].checkIfEmpty(type))
+                    if(!hands[buildings[adjList[i]].getPlayer()].checkIfEmpty(type))
                     {
                         hands[buildings[adjList[i]].getPlayer()].stealResource(type);
                         hands[playersID].addResource(type);
@@ -413,12 +412,50 @@ public class SOCGameState extends GameState {
 
     //USED FOR TESTING ONLY
     //Allows us to test features dependant on resources
-    public void givePlayerResources()
+    public void givePlayerResources(int player)
     {
-        hands[playersID].addBrick(10);
-        hands[playersID].addRock(10);
-        hands[playersID].addSheep(10);
-        hands[playersID].addWheat(10);
-        hands[playersID].addWood(10);
+        hands[player].addBrick(10);
+        hands[player].addRock(10);
+        hands[player].addSheep(10);
+        hands[player].addWheat(10);
+        hands[player].addWood(10);
+    }
+
+    //USED FOR TESTING ONLY
+    //Allows us to set up roads to test methods dependant on roads
+    public void generateRoad(int spot, int player)
+    {
+        roads[spot].setIsEmpty(false);
+        roads[spot].setPlayer(player);
+    }
+
+    //USED FOR TESTING ONLY
+    //Allows us to set up buildings to test methods dependant on buildign placement
+    public void generateBuilding(int spot, int player, int type)
+    {
+        buildings[spot].setIsEmpty(false);
+        buildings[spot].setPlayer(player);
+        buildings[spot].setTypeOfBuilding(type);
+    }
+
+    //USED FOR TESTING ONLY
+    //Allows us to set the dice, allows for testing of secodn part of roll method
+    public void generateRoll(int die1, int die2)
+    {
+
+        this.die1 = die1;
+        this.die2 = die2;
+
+        if(die1 + die2 != 7) //what to do if not a 7
+        {
+            for(byte i = 0; i < tiles.length; i++) //check all tiles for the roll number
+            {
+                if(tiles[i].getRollNumber() == die1 + die2 && i != robber) //a tile matches the roll, dispense res
+                {
+                    byte[] buildList = tileToBuildingAdjList[i]; //tile's adj spots
+                    distributeResources(buildList,tiles[i].getResource());
+                }
+            }
+        }
     }
 }

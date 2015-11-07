@@ -9,10 +9,11 @@ import edu.up.cs301.game.infoMsg.GameState;
 public class SOCGameState extends GameState {
     private int playersID; //ID of the player whose turn it is
     private int numPlayers; //number of players for this game
-    private int score0; //player 0's score TODO: make scores in an array
-    private int score1; //player 1's score
-    private int score2; //player 2's score
-    private int score3; //player 3's score
+    private int[] scores; //The scores of each of the players
+    //private int score0; //player 0's score TODO: make scores in an array
+    //private int score1; //player 1's score
+    ///private int score2; //player 2's score
+    //private int score3; //player 3's score
     private int die1; //the red die
     private int die2; //the yellow die
     private int robber; //where the robber is
@@ -21,6 +22,7 @@ public class SOCGameState extends GameState {
     private Building[] buildings; //all the building spots
     private Hand[] hands; //the players' hands
     private boolean[] robberWasRolled; //denotes if a 7 was rolled before and player has reacted
+    public static final int VICTORY_POINTS_TO_WIN = 5;
 
     //List of all roads adjacent to a given road
     public static final byte[][] roadToRoadAdjList = {{1, 6}, {0, 2, 7}, {1, 3, 7}, {2, 4, 8}, {3, 5, 8}, {4, 9}, {0, 10, 11}, {1, 2, 12, 13}, {3, 4, 14, 15}, {5, 16, 17}, {6, 11, 18}, {6, 10, 12, 19}, {7, 11, 13, 19}, {7, 12, 14, 20}, {8, 13, 15, 20}, {8, 14, 16, 21}, {9, 15, 17, 21}, {9, 16, 22}, {10, 23, 24}, {11, 12, 25, 26}, {13, 14, 27, 28}, {15, 16, 29, 30}, {17, 31, 32}, {18, 24, 33}, {18, 23, 25, 34}, {19, 24, 26, 34}, {19, 25, 27, 35}, {20, 26, 28, 35}, {20, 27, 29, 36}, {21, 28, 30, 36}, {21, 29, 31, 37}, {22, 30, 32, 37}, {22, 31, 38}, {23, 39}, {24, 25, 40, 41}, {26, 27, 42, 43}, {28, 29, 44, 45}, {30, 31, 46, 47}, {32, 48}, {33, 40, 49}, {34, 39, 41, 49}, {34, 40, 42, 50}, {35, 41, 43, 50}, {35, 42, 44, 51}, {36, 43, 45, 51}, {36, 44, 46, 52}, {37, 45, 47, 52}, {37, 46, 48, 53}, {38, 47, 53}, {39, 40, 54}, {41, 42, 55, 56}, {43, 44, 57, 58}, {45, 46, 59, 60}, {47, 48, 61}, {49, 55, 62}, {50, 54, 56, 62}, {50, 55, 57, 63}, {51, 56, 58, 63}, {51, 57, 59, 64}, {52, 58, 60, 64}, {52, 59, 61, 65}, {53, 60, 65}, {54, 55, 66}, {56, 57, 67, 68}, {58, 59, 69, 70}, {60, 61, 71}, {62, 67}, {63, 66, 68}, {63, 67, 69}, {64, 68, 70}, {64, 69, 71}, {65, 70}};
@@ -56,10 +58,10 @@ public class SOCGameState extends GameState {
     {
         playersID = 0;
         this.numPlayers = numPlayers;
-        score0 = 0;
-        score1 = 0;
-        score2 = 0;
-        score3 = 0;
+        scores = new int[4];
+        for(int i = 0; i < 4; i++){
+            scores[i] = 0;
+        }
         die1 = 1;
         die2 = 1;
         robber = 7;
@@ -100,10 +102,10 @@ public class SOCGameState extends GameState {
                         boolean[] robberWasRolled)
     {
         this.playersID = ID;
-        this.score0 = score0;
-        this.score1 = score1;
-        this.score2 = score2;
-        this.score3 = score3;
+        scores[0] = score0;
+        scores[1] = score1;
+        scores[2] = score2;
+        scores[3] = score3;
         this.die1 = die1;
         this.die2 = die2;
         this.robber = robber;
@@ -130,25 +132,25 @@ public class SOCGameState extends GameState {
     //Method to return the score of player 0
     public int getScore0()
     {
-        return score0;
+        return scores[0];
     }
 
     //Method to return the score of player 1
     public int getScore1()
     {
-        return score1;
+        return scores[1];
     }
 
     //Method to return the score of player 2
     public int getScore2()
     {
-        return score2;
+        return scores[2];
     }
 
     //Method to return the score of player 3
     public int getScore3()
     {
-        return score3;
+        return scores[3];
     }
 
     //Method to return the value of the first die
@@ -375,11 +377,16 @@ public class SOCGameState extends GameState {
         buildings[spot].setTypeOfBuilding(Building.SETTLEMENT);
         buildings[spot].setPlayer(playersID);
 
-        //remove resources and return true
+        //Remove resources
         hands[playersID].removeWood(1);
         hands[playersID].removeBrick(1);
         hands[playersID].removeWheat(1);
         hands[playersID].removeSheep(1);
+
+        //Add a point to the player who built the settlement
+        scores[playersID]++;
+
+        //Return true
         return true;
     }
 
@@ -399,12 +406,18 @@ public class SOCGameState extends GameState {
             return false; //lacking resources!
         }
 
-        //Set the building to a city, remove resources, and return true
+        //Set the building to a city, remove resources
         buildings[spot].setTypeOfBuilding(Building.CITY);
         hands[playersID].removeRock(3);
         hands[playersID].removeWheat(2);
+
+        //Add a point to the player who built the city
+        scores[playersID]++;
+
+        //Return true
         return true;
     }
+
     //Moves the turn to the next player in the rotation
     public void endTurn()
     {

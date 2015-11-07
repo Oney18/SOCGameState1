@@ -10,10 +10,6 @@ public class SOCGameState extends GameState {
     private int playersID; //ID of the player whose turn it is
     private int numPlayers; //number of players for this game
     private int[] scores; //The scores of each of the players
-    //private int score0; //player 0's score TODO: make scores in an array
-    //private int score1; //player 1's score
-    ///private int score2; //player 2's score
-    //private int score3; //player 3's score
     private int die1; //the red die
     private int die2; //the yellow die
     private int robber; //where the robber is
@@ -359,8 +355,9 @@ public class SOCGameState extends GameState {
             return false;
         }
 
-        //Get list of adjacent roads to the current spot
+        //Get list of adjacent buildings and roads to the current spot
         byte[] buildingAdjList = buildingToBuildingAdjList[spot];
+        byte[] roadAdjList = roadToBuildingAdjList[spot];
 
         //Check to see if a building is too close, if so return false
         for(int i = 0; i < buildingAdjList.length; i++)
@@ -371,22 +368,33 @@ public class SOCGameState extends GameState {
             }
         }
 
-        //If the player can build, build the building and set the road to not empty
-        buildings[spot].setIsEmpty(false);
-        buildings[spot].setTypeOfBuilding(Building.SETTLEMENT);
-        buildings[spot].setPlayer(playersID);
+        //Check to see if a road is next to the spot, if not return false
+        for(int i = 0; i < roadAdjList.length; i++)
+        {
+            //If the road is not empty and it belong to the player they can build a settlement
+            if(!roads[roadAdjList[i]].isEmpty() && roads[roadAdjList[i]].getPlayer() == playersID)
+            {
+                //If the player can build, build the building and set the road to not empty
+                buildings[spot].setIsEmpty(false);
+                buildings[spot].setTypeOfBuilding(Building.SETTLEMENT);
+                buildings[spot].setPlayer(playersID);
 
-        //Remove resources
-        hands[playersID].removeWood(1);
-        hands[playersID].removeBrick(1);
-        hands[playersID].removeWheat(1);
-        hands[playersID].removeSheep(1);
+                //Remove resources
+                hands[playersID].removeWood(1);
+                hands[playersID].removeBrick(1);
+                hands[playersID].removeWheat(1);
+                hands[playersID].removeSheep(1);
 
-        //Add a point to the player who built the settlement
-        scores[playersID]++;
+                //Add a point to the player who built the settlement
+                scores[playersID]++;
 
-        //Return true
-        return true;
+                //Return true
+                return true;
+            }
+        }
+
+        //If there was no adjacent road return false
+        return false;
     }
 
     //Method to upgrade from a settlement to a city

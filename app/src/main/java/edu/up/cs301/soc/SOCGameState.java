@@ -173,10 +173,10 @@ public class SOCGameState extends GameState {
     public void distributeResources(byte[] buildList, int resource){
         for (byte j = 0; j < buildList.length; j++) {
             switch (buildings[buildList[j]].getTypeOfBuilding()) {
-                case 0: //settlement
+                case Building.SETTLEMENT: //settlement
                     givePlayersCards(hands[buildings[buildList[j]].getPlayer()], resource, 1);
                     break;
-                case 1: //city
+                case Building.CITY: //city
                     givePlayersCards(hands[buildings[buildList[j]].getPlayer()], resource, 2);
                     break;
                 default: //empty
@@ -405,9 +405,20 @@ public class SOCGameState extends GameState {
         hands[playersID].removeWheat(2);
         return true;
     }
-     //Moves the turn to the enxt player in the rotation
+    //Moves the turn to the next player in the rotation
     public void endTurn()
     {
-        playersID = (playersID + 1) % 3;
+        playersID = (playersID + 1) % numPlayers;
+    }
+
+    //USED FOR TESTING ONLY
+    //Allows us to test features dependant on resources
+    public void givePlayerResources()
+    {
+        hands[playersID].addBrick(10);
+        hands[playersID].addRock(10);
+        hands[playersID].addSheep(10);
+        hands[playersID].addWheat(10);
+        hands[playersID].addWood(10);
     }
 }

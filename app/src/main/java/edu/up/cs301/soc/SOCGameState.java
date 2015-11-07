@@ -4,8 +4,18 @@ import java.util.Random;
 import edu.up.cs301.game.infoMsg.GameState;
 
 /**
- * Created by oney18 on 10/27/2015.
- */
+ * SOCGameState
+ *
+ * This class represents an instance of the game's data.
+ * Within it holds all the data for the game of Catan, as well as the methods
+ * to interact with the data as a player would do so.
+ *
+ * @author Jordan Goldey
+ * @author Matthew Schneider
+ * @author Jarrett Oney
+ *
+ * @version Nov 2015
+ * */
 public class SOCGameState extends GameState {
     private int playersID; //ID of the player whose turn it is
     private int numPlayers; //number of players for this game
@@ -97,11 +107,12 @@ public class SOCGameState extends GameState {
     }
 
     //Constructor to set all instance variables to values passed in as parameters
-    public SOCGameState(int ID, int score0, int score1, int score2, int score3, int die1, int die2,
+    public SOCGameState(int ID, int numPlayers, int score0, int score1, int score2, int score3, int die1, int die2,
                         int robber, Road[] roads, Tile[] tiles, Building[] buildings, Hand[] hands,
                         boolean[] robberWasRolled)
     {
         this.playersID = ID;
+        this.numPlayers = numPlayers;
         scores[0] = score0;
         scores[1] = score1;
         scores[2] = score2;
@@ -118,7 +129,7 @@ public class SOCGameState extends GameState {
 
     //Copy constructor to create an identical version of the given game state
     public SOCGameState(SOCGameState soc){
-        this(soc.getPlayersID(), soc.getScore0(), soc.getScore1(), soc.getScore2(), soc.getScore3(),
+        this(soc.getPlayersID(), soc.getNumPlayers(), soc.getScore0(), soc.getScore1(), soc.getScore2(), soc.getScore3(),
                 soc.getDie1(), soc.getDie2(), soc.getRobber(), soc.getRoads(), soc.getTiles(), soc.getBuildings(),
                 soc.getHands(), soc.getRobberWasRolled());
     }
@@ -127,6 +138,12 @@ public class SOCGameState extends GameState {
     public int getPlayersID()
     {
         return playersID;
+    }
+
+    //Method to return the number of players in the game
+    public int getNumPlayers()
+    {
+        return  numPlayers;
     }
 
     //Method to return the score of player 0

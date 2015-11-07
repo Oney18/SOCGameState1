@@ -12,6 +12,11 @@ import static org.junit.Assert.*;
 public class SOCGameStateTest {
 
     @Test
+    public void testSOCGameState() throws Exception {
+        SOCGameState soc = new SOCGameState(4);
+    }
+
+    @Test
     //see testRoll
     public void testDistributeResources() throws Exception {
 
@@ -36,6 +41,7 @@ public class SOCGameStateTest {
         }
 
         assertNotEquals(initRoll, soc.getRoll());
+
 
         //Tests the distributing features of roll
         soc.generateBuilding(22, 0, Building.CITY); //player 0 city at spot 22

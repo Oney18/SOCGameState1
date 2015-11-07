@@ -2,6 +2,8 @@ package edu.up.cs301.soc;
 
 /**
  * Created by oney18 on 10/27/2015.
+ *
+ * Class used to keep track of how many cards a player has at any time
  */
 public class Hand {
     private int wheats;

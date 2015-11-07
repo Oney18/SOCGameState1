@@ -238,6 +238,7 @@ public class SOCGameState extends GameState {
         for(byte i = 0; i < adjList.length; i++)
         {
             if(buildings[adjList[i]].getPlayer() != Building.EMPTY &&
+                    buildings[adjList[i]].getPlayer() != playersID &&
                     hands[buildings[adjList[i]].getPlayer()].getTotal() != 0)
             {
                 int resourceToSteal = rng.nextInt(5)+1; //adds randomness to the resource selection

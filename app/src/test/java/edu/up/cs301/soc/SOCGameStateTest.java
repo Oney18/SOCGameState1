@@ -2,6 +2,8 @@ package edu.up.cs301.soc;
 
 import org.junit.Test;
 
+import edu.up.cs301.game.R;
+
 import static org.junit.Assert.*;
 
 /**
@@ -95,6 +97,47 @@ public class SOCGameStateTest {
 
     @Test
     public void testMoveRobber() throws Exception {
+        SOCGameState soc = new SOCGameState(4);
+        Hand[] testHands;
+        soc.generateBuilding(33, 0, Building.SETTLEMENT); //0 has a settlement at spot 33
+        soc.generateRoll(4, 5); //0 has 1 sheep
+
+        testHands = soc.getHands();
+        assertEquals(testHands[0].getTotal(), 1);
+        assertEquals(testHands[0].getSheep(), 1);
+        assertEquals(soc.getRobber(), 7);
+
+
+        soc.endTurn(); //now player 1's turn
+        soc.moveRobber(10); //1 moves robber to spot 10, 0 is adjacent
+        //0 should lose 1 sheep, 1 should gain 1 sheep
+
+        testHands = soc.getHands();
+        assertEquals(testHands[0].getTotal(), 0);
+        assertEquals(testHands[1].getTotal(), 1);
+        assertEquals(testHands[1].getSheep(), 1);
+        assertEquals(soc.getRobber(), 10);
+
+
+        soc.endTurn(); //now player 2's turn
+        soc.moveRobber(9); //2 moves robber to spot 9, 0 is adjacent
+        //0 has nothing, so nothing should be robbed
+
+        testHands = soc.getHands();
+        assertEquals(testHands[0].getTotal(), 0);
+        assertEquals(testHands[2].getTotal(), 0);
+        assertEquals(soc.getRobber(), 9);
+
+
+        soc.endTurn(); //now player 3's turn
+        soc.givePlayerResources(0); //0 now has 10 of everything
+        soc.moveRobber(14);//3 moves robber to spot 14, 0 is adjacent
+        //Something is stolen from 0 and added to 3
+
+        testHands = soc.getHands();
+        assertEquals(testHands[0].getTotal(), 49);
+        assertEquals(testHands[3].getTotal(), 1);
+        assertEquals(soc.getRobber(), 14);
 
     }
 
@@ -134,6 +177,7 @@ public class SOCGameStateTest {
         soc.buildRoad(35); //should be unable to as nothing exists on the board
         testRoads = soc.getRoads();
         testHands = soc.getHands();
+        assertEquals(testRoads[51].getPlayer(), Road.EMPTY);
         assertEquals(testRoads[35].isEmpty(), true); //nothing built in spot
         assertEquals(testHands[0].getTotal(), 50); //nothing should have been spent
 
@@ -143,13 +187,32 @@ public class SOCGameStateTest {
 
         testRoads = soc.getRoads();
         testHands = soc.getHands();
+        assertEquals(testRoads[51].getPlayer(), 0);
         assertEquals(testRoads[51].isEmpty(), false); //road in spot
         assertEquals(testHands[0].getTotal(), 48); //2 resources spent, 1 wood 1 brick
         assertEquals(testHands[0].getWood(), 9);
         assertEquals(testHands[0].getBricks(), 9);
 
         soc.generateRoad(57, 1); //1 has a road at 57, is adjacent to 51
-        soc.buildRoad(57); //0 tries to build a road where 1 already has a ro
+        soc.buildRoad(57); //0 tries to build a road where 1 already has a road, should do nothing
+
+        testRoads = soc.getRoads();
+        testHands = soc.getHands();
+        assertEquals(testRoads[57].getPlayer(), 1); //0 did not overwrite
+        assertEquals(testHands[0].getTotal(), 48); //0 shoudl not have changed
+        assertEquals(testHands[0].getWood(), 9);
+        assertEquals(testHands[0].getBricks(), 9);
+
+        soc.removeResources(9, 10, 10, 9, 10); //0 has nothing
+        soc.buildRoad(43); //0 tries to build at 43, but lacks resources, nothign should change
+
+        testRoads = soc.getRoads();
+        testHands = soc.getHands();
+        assertEquals(testRoads[43].getPlayer(), Road.EMPTY); //0 did not overwrite
+        assertEquals(testRoads[43].isEmpty(), true);
+        assertEquals(testHands[0].getTotal(), 0); //0 should have nothing
+        assertEquals(testHands[0].getWood(), 0);
+        assertEquals(testHands[0].getBricks(), 0);
 
 
     }

@@ -14,6 +14,44 @@ public class SOCGameStateTest {
     @Test
     public void testSOCGameState() throws Exception {
         SOCGameState soc = new SOCGameState(4);
+
+        //Alter the state via rolls, manipulating resources and spots
+        soc.generateBuilding(22, 0, Building.SETTLEMENT); //creates a 0 settlement at 22
+        soc.generateBuilding(41, 2, Building.CITY); //creates a 2 city at 41
+        soc.generateRoad(19, 3); //creates a 3 road at 19
+        soc.givePlayerResources(1); //gives 1 10 of everything
+        soc.generateRoll(4, 1); //gives 0 1 brick, 2 2 rocks
+        soc.generateRoll(4, 3); //alters robberWasRolled
+
+        //Test Copy Ctor
+        SOCGameState testSoc = new SOCGameState(soc);
+
+        Hand[] testHands = testSoc.getHands();
+        Building[] testBuildings = testSoc.getBuildings();
+        Road[] testRoads = testSoc.getRoads();
+        boolean[] testRob = testSoc.getRobberWasRolled();
+
+        assertEquals(testBuildings[22].isEmpty(), false);
+        assertEquals(testBuildings[22].getPlayer(), 0);
+        assertEquals(testBuildings[22].getTypeOfBuilding(), Building.SETTLEMENT);
+
+        assertEquals(testBuildings[41].isEmpty(), false);
+        assertEquals(testBuildings[41].getPlayer(), 2);
+        assertEquals(testBuildings[41].getTypeOfBuilding(), Building.CITY);
+
+        assertEquals(testBuildings[4].isEmpty(), true); //Should be empty
+
+        assertEquals(testRoads[19].isEmpty(), false);
+        assertEquals(testRoads[19].getPlayer(), 3);
+
+        assertEquals(testRoads[5].isEmpty(), true); //Should be empty
+
+        assertEquals(testHands[1].getTotal(), 50);
+        assertEquals(testHands[0].getBricks(), 1);
+        assertEquals(testHands[2].getRocks(), 2);
+        assertEquals(testHands[3].getTotal(), 0); //Should be at 0
+
+        assertEquals(testRob[0], true); //Same result for all entries in matrix
     }
 
     @Test
@@ -29,9 +67,12 @@ public class SOCGameStateTest {
     }
 
     @Test
-    //Also tests distributeResources and givePlayersCards as both methods are called from roll only
+    //Also tests distributeResources and givePlayersCards as both methods are called from roll exclusively
     public void testRoll() throws Exception {
         SOCGameState soc = new SOCGameState(4);
+        Hand[] testHand;
+        int[] testTots;
+        boolean[] testRob;
 
         int initRoll = soc.getRoll();
 
@@ -50,9 +91,9 @@ public class SOCGameStateTest {
         soc.generateBuilding(11, 3, Building.SETTLEMENT); //player 3 city at spot 11
 
         soc.generateRoll(2, 3); //3 gets 1 brick, 0 gets 2 bricks, 1 gets 1 rock
-        Hand[] testHand = soc.getHands();
 
-        int[] testTots = new int[4]; //gets totals to make sure nothing else happened to other resources
+        testHand = soc.getHands();
+        testTots = new int[4]; //gets totals to make sure nothing else happened to other resources
         for(int i = 0; i < testTots.length; i++)
         {
             testTots[i] = testHand[i].getTotal();
@@ -98,6 +139,19 @@ public class SOCGameStateTest {
         assertEquals(testTots[1], 1);
         assertEquals(testHand[2].getWood(), 2);
         assertEquals(testTots[2], 2);
+
+        testRob = soc.getRobberWasRolled(); //robberWasRolled shoudl all be false
+        assertEquals(testRob[0], false);
+        assertEquals(testRob[1], false);
+        assertEquals(testRob[2], false);
+        assertEquals(testRob[3], false);
+
+        soc.generateRoll(2, 5); //7 rolled, res not changed, robberWasRolled needs to be set to true
+        testRob = soc.getRobberWasRolled();
+        assertEquals(testRob[0], true);
+        assertEquals(testRob[1], true);
+        assertEquals(testRob[2], true);
+        assertEquals(testRob[3], true);
 
     }
 

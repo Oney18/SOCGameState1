@@ -109,6 +109,7 @@ public class SOCGameState extends GameState {
     {
         this.playersID = ID;
         this.numPlayers = numPlayers;
+        int[] scores = new int[4];
         scores[0] = score0;
         scores[1] = score1;
         scores[2] = score2;
@@ -230,7 +231,7 @@ public class SOCGameState extends GameState {
         die1 = rng.nextInt(6) + 1;
         die2 = rng.nextInt(6) + 1;
 
-        if(die1 + die2 != 7) //what to do if not a 7
+        if(die1 + die2 != 7) //not possible to give res on 7
         {
             for(byte i = 0; i < tiles.length; i++) //check all tiles for the roll number
             {
@@ -239,6 +240,13 @@ public class SOCGameState extends GameState {
                     byte[] buildList = tileToBuildingAdjList[i]; //tile's adj spots
                     distributeResources(buildList,tiles[i].getResource());
                 }
+            }
+        }
+        else
+        {
+            for(int i = 0; i < robberWasRolled.length; i++)
+            {
+                robberWasRolled[i] = true;
             }
         }
     }
@@ -375,7 +383,7 @@ public class SOCGameState extends GameState {
 
         //Get list of adjacent buildings and roads to the current spot
         byte[] buildingAdjList = buildingToBuildingAdjList[spot];
-        byte[] roadAdjList = roadToBuildingAdjList[spot];
+        byte[] roadAdjList = buildingToRoadAdjList[spot];
 
         //Check to see if a building is too close, if so return false
         for(int i = 0; i < buildingAdjList.length; i++)
@@ -494,6 +502,13 @@ public class SOCGameState extends GameState {
                     byte[] buildList = tileToBuildingAdjList[i]; //tile's adj spots
                     distributeResources(buildList,tiles[i].getResource());
                 }
+            }
+        }
+        else
+        {
+            for(int i = 0; i < robberWasRolled.length; i++)
+            {
+                robberWasRolled[i] = true;
             }
         }
     }

@@ -226,10 +226,56 @@ public class SOCGameStateTest {
     @Test
     public void testBuildSettlement() throws Exception {
         SOCGameState soc = new SOCGameState(4);
+        Building[] testBuildings;
+        Hand[] testHands;
 
         soc.givePlayerResources(0);
+        soc.buildSettlement(21);
+        testBuildings = soc.getBuildings();
+        testHands = soc.getHands();
+        assertEquals(testBuildings[21].isEmpty(), true); //nothing is built since no adjacent road
+        assertEquals(testHands[0].getTotal(), 50); //nothing should have been spent
 
-        //TODO: initialize conditions for where can build, i.e. add method to generate buildings in gamestate for now
+        soc.generateRoad(28, 0); //force it to make a road
+
+        soc.buildSettlement(21); //build a settlement
+        testBuildings = soc.getBuildings();
+        testHands = soc.getHands();
+
+        //Test building is made
+        assertEquals(testBuildings[21].isEmpty(), false); //building spot is not empty
+        assertEquals(testBuildings[21].getTypeOfBuilding(), Building.SETTLEMENT); //building is a settlement
+        assertEquals(testBuildings[21].getPlayer(), 0); //building belongs to player 0
+
+        //Test hand is decremented accordingly
+        assertEquals(testHands[0].getTotal(), 46); //total resources removed
+        assertEquals(testHands[0].getWood(), 9); //wood resources removed
+        assertEquals(testHands[0].getBricks(), 9); //brick resources removed
+        assertEquals(testHands[0].getSheep(), 9); //sheep resources removed
+        assertEquals(testHands[0].getWheats(), 9); //wheat resources removed
+
+        //Test score is increased
+        assertEquals(soc.getScore0(), 1); //Score increased by one
+
+        //Go to next player
+        soc.endTurn();
+
+        soc.generateRoad(27, 1); //force it to make a road
+
+        soc.buildSettlement(20); //build a settlement
+        testBuildings = soc.getBuildings();
+        testHands = soc.getHands();
+
+        assertEquals(testBuildings[20].isEmpty(), true); //nothing is built since building is too close
+        assertEquals(testHands[1].getTotal(), 50); //nothing should have been spent
+
+        soc.buildSettlement(21); //build a settlement
+        testBuildings = soc.getBuildings();
+        testHands = soc.getHands();
+
+        assertEquals(testBuildings[21].isEmpty(),false); //nothing is built since building is player0's
+        assertEquals(testBuildings[21].getPlayer(), 0); //building still belongs to player 0
+        assertEquals(testHands[1].getTotal(), 50); //nothing should have been spent
     }
 
     @Test

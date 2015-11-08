@@ -66,14 +66,20 @@ public class SOCGameState extends GameState {
     {
         playersID = 0;
         this.numPlayers = numPlayers;
-        scores = new int[4];
-        for(int i = 0; i < 4; i++){
+        scores = new int[numPlayers];
+        for(int i = 0; i < numPlayers; i++){
             scores[i] = 0;
         }
         die1 = 1;
         die2 = 1;
         robber = 7;
-        robberWasRolled = new boolean[]{false, false, false, false};
+
+        //Initialize robberWasRolled array
+        robberWasRolled = new boolean[numPlayers];
+        for(int i = 0; i < robberWasRolled.length; i++)
+        {
+            robberWasRolled[i] = false;
+        }
 
         //Initialize all roads on the board
         roads = new Road[72];
@@ -97,7 +103,7 @@ public class SOCGameState extends GameState {
         }
 
         //Initialize all the players hands
-        hands = new Hand[4];
+        hands = new Hand[numPlayers];
         for(int i = 0; i < hands.length; i++)
         {
             hands[i] = new Hand();
@@ -111,7 +117,7 @@ public class SOCGameState extends GameState {
     {
         this.playersID = ID;
         this.numPlayers = numPlayers;
-        int[] scores = new int[4];
+        int[] scores = new int[numPlayers];
         scores[0] = score0;
         scores[1] = score1;
         scores[2] = score2;

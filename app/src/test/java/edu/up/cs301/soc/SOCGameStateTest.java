@@ -4,7 +4,13 @@ import org.junit.Test;
 import static org.junit.Assert.*;
 
 /**
- * Created by oney18 on 11/6/2015.
+ * Test Cases to test GameState for all methods.
+ *
+ * @author Jarrett Oney
+ * @author Jordan Goldey
+ * @author Matthew Schneider
+ *
+ * @version Nov 2015
  */
 public class SOCGameStateTest {
 
@@ -49,18 +55,6 @@ public class SOCGameStateTest {
         assertEquals(testHands[3].getTotal(), 0); //Should be at 0
 
         assertEquals(testRob[0], true); //Same result for all entries in matrix
-    }
-
-    @Test
-    //see testRoll
-    public void testDistributeResources() throws Exception {
-
-    }
-
-    @Test
-    //see testRoll
-    public void testGivePlayersCards() throws Exception {
-
     }
 
     @Test

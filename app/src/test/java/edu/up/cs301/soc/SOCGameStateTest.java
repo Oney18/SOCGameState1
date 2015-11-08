@@ -1,9 +1,6 @@
 package edu.up.cs301.soc;
 
 import org.junit.Test;
-
-import edu.up.cs301.game.R;
-
 import static org.junit.Assert.*;
 
 /**
@@ -260,6 +257,8 @@ public class SOCGameStateTest {
         //Go to next player
         soc.endTurn();
 
+        soc.givePlayerResources(1);
+
         soc.generateRoad(27, 1); //force it to make a road
 
         soc.buildSettlement(20); //build a settlement
@@ -273,18 +272,84 @@ public class SOCGameStateTest {
         testBuildings = soc.getBuildings();
         testHands = soc.getHands();
 
-        assertEquals(testBuildings[21].isEmpty(),false); //nothing is built since building is player0's
+        assertEquals(testBuildings[21].isEmpty(), false); //nothing is built since building is player0's
         assertEquals(testBuildings[21].getPlayer(), 0); //building still belongs to player 0
         assertEquals(testHands[1].getTotal(), 50); //nothing should have been spent
+
+        //Go to next player
+        soc.endTurn();
+
+        soc.generateRoad(12, 2); //force it to make a road
+
+        soc.buildSettlement(10); //build a settlement
+        testBuildings = soc.getBuildings();
+        testHands = soc.getHands();
+
+        assertEquals(testBuildings[10].isEmpty(), true); //nothing is built since no resources
+        assertEquals(testHands[2].getTotal(), 0); //nothing should have been spent
     }
 
     @Test
     public void testUpgradeSettlement() throws Exception {
         SOCGameState soc = new SOCGameState(4);
+        Building[] testBuildings;
+        Hand[] testHands;
 
+        //Build a building not owned by player
+        soc.generateBuilding(21, 1, Building.SETTLEMENT); //force it to build a settlement
+
+        //Try to upgrade a building the player doesn't own
+        soc.upgradeSettlement(21);
+        testBuildings = soc.getBuildings();
+        assertEquals(testBuildings[21].isEmpty(), false); //building spot is not empty
+        assertEquals(testBuildings[21].getTypeOfBuilding(), Building.SETTLEMENT); //building is still a settlement
+        assertEquals(testBuildings[21].getPlayer(), 1); //building belongs to player 1
+
+        //Give the player resources
         soc.givePlayerResources(0);
 
-        //TODO: initialize conditions for where can build, i.e. add method to generate buildings in gamestate for now
+        //Build a building owned by player but a city
+        soc.generateBuilding(21, 0, Building.CITY); //force it to build a settlement
+
+        //Try to upgrade an already upgraded building
+        soc.upgradeSettlement(21);
+        testBuildings = soc.getBuildings();
+        testHands = soc.getHands();
+        assertEquals(testBuildings[21].isEmpty(), false); //building spot is not empty
+        assertEquals(testBuildings[21].getTypeOfBuilding(), Building.CITY); //building is still a settlement
+        assertEquals(testBuildings[21].getPlayer(), 0); //building belongs to player 1
+        assertEquals(testHands[0].getTotal(), 50); //nothing should have been spent
+
+        //Build a road and a settlement for the player to upgrade
+        soc.generateRoad(12, 0); //force it to build a road
+        soc.generateBuilding(10, 0, Building.SETTLEMENT); //force it to build a settlement
+
+        //Upgrade and make sure it did
+        soc.upgradeSettlement(10);
+        testBuildings = soc.getBuildings();
+        testHands = soc.getHands();
+        assertEquals(testBuildings[10].isEmpty(), false); //building spot is not empty
+        assertEquals(testBuildings[10].getTypeOfBuilding(), Building.CITY); //building is now a city
+        assertEquals(testBuildings[10].getPlayer(), 0); //building belongs to player 0
+        assertEquals(testHands[0].getTotal(), 45); //resources spent
+        assertEquals(testHands[0].getRocks(), 7); //rock resources removed
+        assertEquals(testHands[0].getWheats(), 8); //wheat resources removed
+
+        //Move to next player
+        soc.endTurn();
+
+        //Build a road and a settlement for the player to upgrade
+        soc.generateRoad(1, 1); //force it to build a road
+        soc.generateBuilding(1, 1, Building.SETTLEMENT); //force it to build a settlement
+
+        //Try to upgrade and make sure it fails since no resources
+        soc.upgradeSettlement(1);
+        testBuildings = soc.getBuildings();
+        testHands = soc.getHands();
+        assertEquals(testBuildings[1].isEmpty(), false); //building spot is not empty
+        assertEquals(testBuildings[1].getTypeOfBuilding(), Building.SETTLEMENT); //building is now a city
+        assertEquals(testBuildings[1].getPlayer(), 1); //building belongs to player 1
+        assertEquals(testHands[1].getTotal(), 0); //no resources spent
     }
 
     @Test

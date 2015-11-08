@@ -55,18 +55,6 @@ public class SOCGameStateTest {
     }
 
     @Test
-    //see testRoll
-    public void testDistributeResources() throws Exception {
-
-    }
-
-    @Test
-    //see testRoll
-    public void testGivePlayersCards() throws Exception {
-
-    }
-
-    @Test
     //Also tests distributeResources and givePlayersCards as both methods are called from roll exclusively
     public void testRoll() throws Exception {
         SOCGameState soc = new SOCGameState(4);

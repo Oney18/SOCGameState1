@@ -1,5 +1,7 @@
 package edu.up.cs301.soc;
 
+import android.util.Log;
+
 import java.util.Random;
 import edu.up.cs301.game.infoMsg.GameState;
 
@@ -403,8 +405,8 @@ public class SOCGameState extends GameState {
         //Check to see if a road is next to the spot, if not return false
         for(int i = 0; i < roadAdjList.length; i++)
         {
-            //If the road is not empty and it belong to the player they can build a settlement
-            if(!roads[roadAdjList[i]].isEmpty() && roads[roadAdjList[i]].getPlayer() == playersID)
+            //If a adjacent road belong to the player they can build a settlement
+            if(roads[roadAdjList[i]].getPlayer() == playersID)
             {
                 //If the player can build, build the building and set the road to not empty
                 buildings[spot].setIsEmpty(false);
@@ -427,6 +429,7 @@ public class SOCGameState extends GameState {
 
         //If there was no adjacent road return false
         return false;
+
     }
 
     //Method to upgrade from a settlement to a city
@@ -434,7 +437,7 @@ public class SOCGameState extends GameState {
     {
         //Make sure the player owns the spot they want to upgrade and can be upgraded, if not return
         //false
-        if(buildings[spot].getPlayer() != playersID || buildings[spot].getTypeOfBuilding() != 0)
+        if(buildings[spot].getPlayer() != playersID || buildings[spot].getTypeOfBuilding() != Building.SETTLEMENT)
         {
             return false;
         }

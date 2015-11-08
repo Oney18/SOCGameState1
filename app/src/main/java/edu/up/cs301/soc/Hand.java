@@ -6,121 +6,139 @@ package edu.up.cs301.soc;
  * Class used to keep track of how many cards a player has at any time
  */
 public class Hand {
-    private int wheats;
-    private int sheep;
-    private int wood;
-    private int bricks;
-    private int rocks;
+    private int wheat;
+    private int wool;
+    private int lumber;
+    private int brick;
+    private int ore;
 
+    //Initializes the hand with no resources in it
     Hand()
     {
-        wheats = 0;
-        sheep = 0;
-        wood = 0;
-        bricks = 0;
-        rocks = 0;
+        wheat = 0;
+        wool = 0;
+        lumber = 0;
+        brick = 0;
+        ore = 0;
     }
 
     //used for 7 roll GUI
+    //Returns the total amount of resources
     public int getTotal()
     {
-        return wheats + sheep + wood + bricks + rocks;
+        return wheat + wool + lumber + brick + ore;
     }
 
-    public int getWheats()
+    //Returns the amount of wheat
+    public int getWheat()
     {
-        return wheats;
+        return wheat;
     }
 
-    public int getSheep()
+    //Returns the amount of wool
+    public int getWool()
     {
-        return sheep;
+        return wool;
     }
 
-    public int getWood()
+    //Returns the amount of lumber
+    public int getLumber()
     {
-        return wood;
+        return lumber;
     }
 
-    public int getBricks()
+    //Returns the amount of brick
+    public int getBrick()
     {
-        return bricks;
+        return brick;
     }
 
-    public int getRocks()
+    //Returns the amount of ore
+    public int getOre()
     {
-        return rocks;
+        return ore;
     }
 
+    //Adds wheat to the hand
     public void addWheat(int count)
     {
-        this.wheats += count;
+        this.wheat += count;
     }
 
-    public void addSheep(int count)
+    //Adds wool to the hand
+    public void addWool(int count)
     {
-        this.sheep += count;
+        this.wool += count;
     }
 
-    public void addWood(int count)
+    //Adds lumber to the hand
+    public void addLumber(int count)
     {
-        this.wood += count;
+        this.lumber += count;
     }
 
+    //Adds brick to the hand
     public void addBrick(int count)
     {
-        this.bricks += count;
+        this.brick += count;
     }
 
-    public void addRock(int count)
+    //Adds ore to the hand
+    public void addOre(int count)
     {
-        this.rocks += count;
+        this.ore += count;
     }
 
+    //Removes wheat from the hand
     public void removeWheat(int count)
     {
-        this.wheats -= count;
+        this.wheat -= count;
     }
 
-    public void removeSheep(int count)
+    //Removes wool from the hand
+    public void removeWool(int count)
     {
-        this.sheep -= count;
+        this.wool -= count;
     }
 
-    public void removeWood(int count)
+    //Removes lumber from the hand
+    public void removeLumber(int count)
     {
-        this.wood -= count;
+        this.lumber -= count;
     }
 
+    //Removes brick from the hand
     public void removeBrick(int count)
     {
-        this.bricks -= count;
+        this.brick -= count;
     }
 
-    public void removeRock(int count)
+    //Removes ore from the hand
+    public void removeOre(int count)
     {
-        this.rocks -= count;
+        this.ore -= count;
     }
 
     //used when a 7 is rolled
+    //Checks to see if the hand has any of the inputted resource
     public boolean checkIfEmpty(int type)
     {
         switch(type)
         {
             case Tile.LUMBER:
-                return wood == 0;
+                return lumber == 0;
 
             case Tile.ORE:
-                return rocks == 0;
+                return ore == 0;
 
             case Tile.BRICK:
-                return bricks == 0;
+                return brick == 0;
 
             case Tile.WOOL:
-                return sheep == 0;
+                return wool == 0;
 
             case Tile.WHEAT:
-                return wheats == 0;
+                return wheat == 0;
 
             default:
                 return false;
@@ -128,28 +146,29 @@ public class Hand {
     }
 
     //used when a 7 is rolled
+    //Removes one of the inputted resource
     public boolean stealResource(int type)
     {
         switch(type)
         {
             case Tile.LUMBER:
-                wood--;
+                lumber--;
                 return true;
 
             case Tile.ORE:
-                rocks--;
+                ore--;
                 return true;
 
             case Tile.BRICK:
-                bricks--;
+                brick--;
                 return true;
 
             case Tile.WOOL:
-                sheep--;
+                wool--;
                 return true;
 
             case Tile.WHEAT:
-                wheats--;
+                wheat--;
                 return true;
 
             default:
@@ -158,28 +177,29 @@ public class Hand {
     }
 
     //used when a 7 is rolled
+    //Adds one of the inputted resource
     public boolean addResource(int type)
     {
         switch(type)
         {
             case Tile.LUMBER:
-                wood++;
+                lumber++;
                 return true;
 
             case Tile.ORE:
-                rocks++;
+                ore++;
                 return true;
 
             case Tile.BRICK:
-                bricks++;
+                brick++;
                 return true;
 
             case Tile.WOOL:
-                sheep++;
+                wool++;
                 return true;
 
             case Tile.WHEAT:
-                wheats++;
+                wheat++;
                 return true;
 
             default:

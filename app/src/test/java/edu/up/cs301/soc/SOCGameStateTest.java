@@ -50,8 +50,8 @@ public class SOCGameStateTest {
         assertEquals(testRoads[5].isEmpty(), true); //Should be empty
 
         assertEquals(testHands[1].getTotal(), 50);
-        assertEquals(testHands[0].getBricks(), 1);
-        assertEquals(testHands[2].getRocks(), 2);
+        assertEquals(testHands[0].getBrick(), 1);
+        assertEquals(testHands[2].getOre(), 2);
         assertEquals(testHands[3].getTotal(), 0); //Should be at 0
 
         assertEquals(testRob[0], true); //Same result for all entries in matrix
@@ -90,11 +90,11 @@ public class SOCGameStateTest {
             testTots[i] = testHand[i].getTotal();
         }
 
-        assertEquals(testHand[0].getBricks(), 2);
+        assertEquals(testHand[0].getBrick(), 2);
         assertEquals(testTots[0], 2);
-        assertEquals(testHand[3].getBricks(), 1);
+        assertEquals(testHand[3].getBrick(), 1);
         assertEquals(testTots[3], 1);
-        assertEquals(testHand[1].getRocks(), 1);
+        assertEquals(testHand[1].getOre(), 1);
         assertEquals(testTots[1], 1);
 
 
@@ -105,14 +105,14 @@ public class SOCGameStateTest {
             testTots[i] = testHand[i].getTotal();
         }
         //repeat tests to make sure nothing changed
-        assertEquals(testHand[0].getBricks(), 2);
+        assertEquals(testHand[0].getBrick(), 2);
         assertEquals(testTots[0], 2);
-        assertEquals(testHand[3].getBricks(), 1);
+        assertEquals(testHand[3].getBrick(), 1);
         assertEquals(testTots[3], 1);
-        assertEquals(testHand[1].getRocks(), 1);
+        assertEquals(testHand[1].getOre(), 1);
         assertEquals(testTots[1], 1);
         //new test(s)
-        assertEquals(testHand[2].getWood(), 2);
+        assertEquals(testHand[2].getLumber(), 2);
         assertEquals(testTots[2], 2);
 
         soc.generateRoll(1, 1); //nobody is on the 2, nothing should change
@@ -122,13 +122,13 @@ public class SOCGameStateTest {
             testTots[i] = testHand[i].getTotal();
         }
         //repeats all tests to make sure nothing changed
-        assertEquals(testHand[0].getBricks(), 2);
+        assertEquals(testHand[0].getBrick(), 2);
         assertEquals(testTots[0], 2);
-        assertEquals(testHand[3].getBricks(), 1);
+        assertEquals(testHand[3].getBrick(), 1);
         assertEquals(testTots[3], 1);
-        assertEquals(testHand[1].getRocks(), 1);
+        assertEquals(testHand[1].getOre(), 1);
         assertEquals(testTots[1], 1);
-        assertEquals(testHand[2].getWood(), 2);
+        assertEquals(testHand[2].getLumber(), 2);
         assertEquals(testTots[2], 2);
 
         testRob = soc.getRobberWasRolled(); //robberWasRolled shoudl all be false
@@ -155,7 +155,7 @@ public class SOCGameStateTest {
 
         testHands = soc.getHands();
         assertEquals(testHands[0].getTotal(), 1);
-        assertEquals(testHands[0].getSheep(), 1);
+        assertEquals(testHands[0].getWool(), 1);
         assertEquals(soc.getRobber(), 7);
 
 
@@ -166,7 +166,7 @@ public class SOCGameStateTest {
         testHands = soc.getHands();
         assertEquals(testHands[0].getTotal(), 0);
         assertEquals(testHands[1].getTotal(), 1);
-        assertEquals(testHands[1].getSheep(), 1);
+        assertEquals(testHands[1].getWool(), 1);
         assertEquals(soc.getRobber(), 10);
 
 
@@ -199,22 +199,22 @@ public class SOCGameStateTest {
         //Player 0 now has 10 of everything
         soc.givePlayerResources(0);
         testHands = soc.getHands();
-        assertEquals(testHands[0].getWood(), 10);
-        assertEquals(testHands[0].getSheep(), 10);
-        assertEquals(testHands[0].getWheats(), 10);
-        assertEquals(testHands[0].getBricks(), 10);
-        assertEquals(testHands[0].getRocks(), 10);
+        assertEquals(testHands[0].getLumber(), 10);
+        assertEquals(testHands[0].getWool(), 10);
+        assertEquals(testHands[0].getWheat(), 10);
+        assertEquals(testHands[0].getBrick(), 10);
+        assertEquals(testHands[0].getOre(), 10);
         assertEquals(testHands[0].getTotal(), 50);
 
         //Remove resources from 0's hand
         soc.removeResources(3, 4, 5, 6, 7);
         testHands = soc.getHands();
 
-        assertEquals(testHands[0].getWood(), 7);
-        assertEquals(testHands[0].getSheep(), 6);
-        assertEquals(testHands[0].getWheats(), 5);
-        assertEquals(testHands[0].getBricks(), 4);
-        assertEquals(testHands[0].getRocks(), 3);
+        assertEquals(testHands[0].getLumber(), 7);
+        assertEquals(testHands[0].getWool(), 6);
+        assertEquals(testHands[0].getWheat(), 5);
+        assertEquals(testHands[0].getBrick(), 4);
+        assertEquals(testHands[0].getOre(), 3);
         assertEquals(testHands[0].getTotal(), 25);
     }
 
@@ -241,8 +241,8 @@ public class SOCGameStateTest {
         assertEquals(testRoads[51].getPlayer(), 0);
         assertEquals(testRoads[51].isEmpty(), false); //road in spot
         assertEquals(testHands[0].getTotal(), 48); //2 resources spent, 1 wood 1 brick
-        assertEquals(testHands[0].getWood(), 9);
-        assertEquals(testHands[0].getBricks(), 9);
+        assertEquals(testHands[0].getLumber(), 9);
+        assertEquals(testHands[0].getBrick(), 9);
 
         soc.generateRoad(57, 1); //1 has a road at 57, is adjacent to 51
         soc.buildRoad(57); //0 tries to build a road where 1 already has a road, should do nothing
@@ -251,8 +251,8 @@ public class SOCGameStateTest {
         testHands = soc.getHands();
         assertEquals(testRoads[57].getPlayer(), 1); //0 did not overwrite
         assertEquals(testHands[0].getTotal(), 48); //0 shoudl not have changed
-        assertEquals(testHands[0].getWood(), 9);
-        assertEquals(testHands[0].getBricks(), 9);
+        assertEquals(testHands[0].getLumber(), 9);
+        assertEquals(testHands[0].getBrick(), 9);
 
         soc.removeResources(9, 10, 10, 9, 10); //0 has nothing
         soc.buildRoad(43); //0 tries to build at 43, but lacks resources, nothign should change
@@ -262,8 +262,8 @@ public class SOCGameStateTest {
         assertEquals(testRoads[43].getPlayer(), Road.EMPTY); //0 did not overwrite
         assertEquals(testRoads[43].isEmpty(), true);
         assertEquals(testHands[0].getTotal(), 0); //0 should have nothing
-        assertEquals(testHands[0].getWood(), 0);
-        assertEquals(testHands[0].getBricks(), 0);
+        assertEquals(testHands[0].getLumber(), 0);
+        assertEquals(testHands[0].getBrick(), 0);
 
 
     }
@@ -294,10 +294,10 @@ public class SOCGameStateTest {
 
         //Test hand is decremented accordingly
         assertEquals(testHands[0].getTotal(), 46); //total resources removed
-        assertEquals(testHands[0].getWood(), 9); //wood resources removed
-        assertEquals(testHands[0].getBricks(), 9); //brick resources removed
-        assertEquals(testHands[0].getSheep(), 9); //sheep resources removed
-        assertEquals(testHands[0].getWheats(), 9); //wheat resources removed
+        assertEquals(testHands[0].getLumber(), 9); //wood resources removed
+        assertEquals(testHands[0].getBrick(), 9); //brick resources removed
+        assertEquals(testHands[0].getWool(), 9); //sheep resources removed
+        assertEquals(testHands[0].getWheat(), 9); //wheat resources removed
 
         //Test score is increased
         assertEquals(soc.getScore0(), 1); //Score increased by one
@@ -380,8 +380,8 @@ public class SOCGameStateTest {
         assertEquals(testBuildings[10].getTypeOfBuilding(), Building.CITY); //building is now a city
         assertEquals(testBuildings[10].getPlayer(), 0); //building belongs to player 0
         assertEquals(testHands[0].getTotal(), 45); //resources spent
-        assertEquals(testHands[0].getRocks(), 7); //rock resources removed
-        assertEquals(testHands[0].getWheats(), 8); //wheat resources removed
+        assertEquals(testHands[0].getOre(), 7); //rock resources removed
+        assertEquals(testHands[0].getWheat(), 8); //wheat resources removed
 
         //Move to next player
         soc.endTurn();

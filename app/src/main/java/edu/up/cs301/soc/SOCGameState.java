@@ -1,7 +1,5 @@
 package edu.up.cs301.soc;
 
-import android.util.Log;
-
 import java.util.Random;
 import edu.up.cs301.game.infoMsg.GameState;
 
@@ -219,13 +217,13 @@ public class SOCGameState extends GameState {
                 playersHand.addWheat(amount);
                 break;
             case Tile.WOOL:
-                playersHand.addSheep(amount);
+                playersHand.addWool(amount);
                 break;
             case Tile.LUMBER:
-                playersHand.addWood(amount);
+                playersHand.addLumber(amount);
                 break;
             case Tile.ORE:
-                playersHand.addRock(amount);
+                playersHand.addOre(amount);
                 break;
             default: //empty
                 break;
@@ -293,11 +291,11 @@ public class SOCGameState extends GameState {
     public void removeResources(int woodToLose, int sheepToLose, int wheatToLose, int brickToLose,
                                 int rockToLose)
     {
-        hands[playersID].removeWood(woodToLose);
-        hands[playersID].removeSheep(sheepToLose);
+        hands[playersID].removeLumber(woodToLose);
+        hands[playersID].removeWool(sheepToLose);
         hands[playersID].removeWheat(wheatToLose);
         hands[playersID].removeBrick(brickToLose);
-        hands[playersID].removeRock(rockToLose);
+        hands[playersID].removeOre(rockToLose);
         robberWasRolled[playersID] = false;
     }
 
@@ -347,7 +345,7 @@ public class SOCGameState extends GameState {
         }
 
         //If player doesn't have enough resources return false
-        if(hands[playersID].getBricks() < 1 || hands[playersID].getWood() < 1)
+        if(hands[playersID].getBrick() < 1 || hands[playersID].getLumber() < 1)
         {
             return false; //lacking resources!
         }
@@ -363,7 +361,7 @@ public class SOCGameState extends GameState {
                 roads[spot].setPlayer(playersID);
                 roads[spot].setIsEmpty(false);
                 hands[playersID].removeBrick(1);
-                hands[playersID].removeWood(1);
+                hands[playersID].removeLumber(1);
                 return true;
             }
         }
@@ -383,8 +381,8 @@ public class SOCGameState extends GameState {
         }
 
         //If player doesn't have enough resources return false
-        if(hands[playersID].getWheats() < 1 || hands[playersID].getSheep() < 1 ||
-                hands[playersID].getWood() < 1 || hands[playersID].getBricks() < 1)
+        if(hands[playersID].getWheat() < 1 || hands[playersID].getWool() < 1 ||
+                hands[playersID].getLumber() < 1 || hands[playersID].getBrick() < 1)
         {
             return false;
         }
@@ -414,10 +412,10 @@ public class SOCGameState extends GameState {
                 buildings[spot].setPlayer(playersID);
 
                 //Remove resources
-                hands[playersID].removeWood(1);
+                hands[playersID].removeLumber(1);
                 hands[playersID].removeBrick(1);
                 hands[playersID].removeWheat(1);
-                hands[playersID].removeSheep(1);
+                hands[playersID].removeWool(1);
 
                 //Add a point to the player who built the settlement
                 scores[playersID]++;
@@ -443,14 +441,14 @@ public class SOCGameState extends GameState {
         }
 
         //Make sure the playyer has the correct number of resources, if not return false
-        if(hands[playersID].getRocks() < 3 || hands[playersID].getWheats() < 2)
+        if(hands[playersID].getOre() < 3 || hands[playersID].getWheat() < 2)
         {
             return false; //lacking resources!
         }
 
         //Set the building to a city, remove resources
         buildings[spot].setTypeOfBuilding(Building.CITY);
-        hands[playersID].removeRock(3);
+        hands[playersID].removeOre(3);
         hands[playersID].removeWheat(2);
 
         //Add a point to the player who built the city
@@ -471,10 +469,10 @@ public class SOCGameState extends GameState {
     public void givePlayerResources(int player)
     {
         hands[player].addBrick(10);
-        hands[player].addRock(10);
-        hands[player].addSheep(10);
+        hands[player].addOre(10);
+        hands[player].addWool(10);
         hands[player].addWheat(10);
-        hands[player].addWood(10);
+        hands[player].addLumber(10);
     }
 
     //USED FOR TESTING ONLY
